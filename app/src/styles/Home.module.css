@@ -1,0 +1,14 @@
+.container {
+}
+
+.form {
+  margin: 0 auto;
+  margin-top: 20%;
+  width: 200px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
