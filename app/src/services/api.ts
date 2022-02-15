@@ -13,10 +13,11 @@ let failedRequestsQueue: FailedRequest[] = [];
 
 export const api = axios.create({
   baseURL: 'http://localhost:3333',
-  headers: {
-    Authorization: `Bearer ${cookies['nextauth.token']}`
-  }
 });
+
+if (cookies && cookies['nextauth.token']) {
+  api.defaults.headers.common['Authorization'] = `Bearer ${cookies['nextauth.token']}`;
+}
 
 api.interceptors.response.use(res => res, (error: AxiosError) => {
   if (error.response?.status === 401) {
@@ -43,7 +44,7 @@ api.interceptors.response.use(res => res, (error: AxiosError) => {
             path: '/'
           })
 
-          api.defaults.headers.put['Authorization'] = `Bearer ${token}`
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
           failedRequestsQueue.forEach(request => request.onSuccess(token));
           failedRequestsQueue = [];

@@ -78,8 +78,7 @@ export function AuthProvider({
         path: '/' // who can access?
       })
       setUser({ email, permissions, roles })
-
-      api.defaults.headers.put['Authorization'] = `Bearer ${token}`
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
       Router.push('/dashboard')
     } catch (err) {
