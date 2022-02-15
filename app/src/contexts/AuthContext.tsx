@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { api } from '../services/api';
 import Router from 'next/router';
-import { setCookie, parseCookies } from 'nookies';
+import { setCookie, parseCookies, destroyCookie } from 'nookies';
 
 type SignInCredentials = {
   email: string;
@@ -28,6 +28,13 @@ export const AuthContext = createContext(
   {} as AuthContextData
 );
 
+export function signOut() {
+  destroyCookie(undefined, 'nextauth.token')
+  destroyCookie(undefined, 'nextauth.refreshToken')
+
+  Router.push('/');
+}
+
 export function AuthProvider({
   children,
 }: AuthProviderProps) {
@@ -38,16 +45,17 @@ export function AuthProvider({
   useEffect(() => {
     const { 'nextauth.token': token } = parseCookies();
 
-    if (token) {
-
-      api.get('/me').then(res => {
-        const { email, permissions, roles } = res.data;
-        setUser({ email, permissions, roles });
-      })
-
+    if (!token) {
+      return;
     }
-  }, [])
 
+    api.get('/me').then(res => {
+      const { email, permissions, roles } = res.data;
+      setUser({ email, permissions, roles });
+    }).catch(() => {
+      signOut();
+    })
+  }, [])
 
   async function signIn({
     email,
@@ -72,7 +80,6 @@ export function AuthProvider({
       setUser({ email, permissions, roles })
 
       api.defaults.headers.put['Authorization'] = `Bearer ${token}`
-
 
       Router.push('/dashboard')
     } catch (err) {

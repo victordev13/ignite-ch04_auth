@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext, signOut } from "../contexts/AuthContext";
 import { api } from '../services/api';
 
 const Dashboard: NextPage = () => {
@@ -10,7 +10,7 @@ const Dashboard: NextPage = () => {
   useEffect(() => {
     api.get('/me').then(res => {
       console.log(res);
-    })
+    }).catch(() => signOut())
   }, []);
 
   return (<h1>{user?.email}</h1>)

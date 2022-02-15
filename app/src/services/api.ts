@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { parseCookies, setCookie } from 'nookies';
+import { signOut } from '../contexts/AuthContext';
 
 type FailedRequest = {
   onSuccess: (token: string) => void,
@@ -16,7 +17,6 @@ export const api = axios.create({
     Authorization: `Bearer ${cookies['nextauth.token']}`
   }
 });
-
 
 api.interceptors.response.use(res => res, (error: AxiosError) => {
   if (error.response?.status === 401) {
@@ -71,9 +71,11 @@ api.interceptors.response.use(res => res, (error: AxiosError) => {
             }
           )
         });
-      } else {
-        // logout
-      }
+      } 
+    } else {
+      signOut();
     }
   }
+
+  return Promise.reject(error);
 })
