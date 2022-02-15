@@ -58,10 +58,7 @@ api.interceptors.response.use(res => res, (error: AxiosError) => {
           failedRequestsQueue.push(
             {
               onSuccess: (token: string) => {
-                if (!originalConfig?.headers) {
-                  return reject();
-                }
-
+                // @ts-ignore
                 originalConfig.headers['Authorization'] = `Bearer ${token}`;
                 resolve(api(originalConfig));
               },

@@ -8,9 +8,9 @@ const Dashboard: NextPage = () => {
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    api.get('/me').then(res => {
-      console.log(res);
-    }).catch(() => signOut())
+    api.get('/me').then(res => console.log(res)).catch(() => {
+      signOut();
+    })
   }, []);
 
   return (<h1>{user?.email}</h1>)
