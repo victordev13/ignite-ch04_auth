@@ -1,3 +1,4 @@
+import { AuthTokenError } from './errors/AuthTokenError';
 import axios, { AxiosError } from 'axios';
 import { parseCookies, setCookie } from 'nookies';
 import { signOut } from '../contexts/AuthContext';
@@ -54,7 +55,7 @@ export function setupAPIClient(ctx = undefined) {
             failedRequestsQueue.forEach(request => request.onFailure(error));
             failedRequestsQueue = [];
 
-            if (process.browser) {
+            if (typeof window !== 'undefined') {
               signOut()
             }
           }).finally(() => {
@@ -77,9 +78,11 @@ export function setupAPIClient(ctx = undefined) {
           });
         }
       } else {
-        if (process.browser) {
+        if (typeof window !== 'undefined') {
           signOut()
         }
+
+        return Promise.reject(new AuthTokenError());
       }
     }
 
