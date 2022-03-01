@@ -5,15 +5,10 @@ import { AuthContext, signOut } from "../contexts/AuthContext";
 import { api } from '../services/apiClient';
 import { withSSRAuth } from '../utils/withSSRAuth';
 import { setupAPIClient } from '../services/api';
-import { useCan } from '../hooks/useCan';
+import { Can } from '../components/Can';
 
 const Dashboard: NextPage = () => {
   const { user } = useContext(AuthContext);
-
-  const userCanSeeMetrics = useCan({
-    permissions: ['metrics.list'],
-    roles: ['administrator']
-  })
 
   useEffect(() => {
     api.get('/me').then(res => console.log(res)).catch(() => {
@@ -21,7 +16,11 @@ const Dashboard: NextPage = () => {
     })
   }, []);
 
-  return (<><h1>{user?.email}</h1>{userCanSeeMetrics && <p>Metrics</p>}</>)
+  return (
+    <><h1>{user?.email}</h1>
+      <Can permissions={['metrics.list']}><p>Metrics</p></Can>
+    </>
+  )
 }
 
 export const getServerSideProps = withSSRAuth(async ctx => {
