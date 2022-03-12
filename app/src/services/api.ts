@@ -11,7 +11,7 @@ type FailedRequest = {
 let isRefreshing = false;
 let failedRequestsQueue: FailedRequest[] = [];
 
-export function setupAPIClient(ctx = undefined) {
+export function setupAPIClient(ctx: any = undefined) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({

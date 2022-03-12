@@ -6,6 +6,7 @@ import { api } from '../services/apiClient';
 import { withSSRAuth } from '../utils/withSSRAuth';
 import { setupAPIClient } from '../services/api';
 import { Can } from '../components/Can';
+import Link from 'next/link';
 
 const Dashboard: NextPage = () => {
   const { user } = useContext(AuthContext);
@@ -17,13 +18,14 @@ const Dashboard: NextPage = () => {
   }, []);
 
   return (
-    <><h1>{user?.email}</h1>
-      <Can permissions={['metrics.list']}><p>Metrics</p></Can>
+    <>
+    <h1>{user?.email}</h1>
+      <Can permissions={['metrics.list']}><Link href="/metrics">Metrics</Link></Can>
     </>
   )
 }
 
-export const getServerSideProps = withSSRAuth(async ctx => {
+export const getServerSideProps = withSSRAuth(async (ctx) => {
   const apiClient = setupAPIClient(ctx);
   const { data } = await apiClient.get('/me');
 
