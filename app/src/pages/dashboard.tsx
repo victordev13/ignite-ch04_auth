@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { NextPage } from 'next';
 import { useContext } from "react";
-import { AuthContext, signOut } from "../contexts/AuthContext";
+import { AuthContext } from "../contexts/AuthContext";
 import { api } from '../services/apiClient';
 import { withSSRAuth } from '../utils/withSSRAuth';
 import { setupAPIClient } from '../services/api';
@@ -9,7 +9,7 @@ import { Can } from '../components/Can';
 import Link from 'next/link';
 
 const Dashboard: NextPage = () => {
-  const { user } = useContext(AuthContext);
+  const { user, signOut } = useContext(AuthContext);
 
   useEffect(() => {
     api.get('/me').then(res => console.log(res)).catch(() => {
@@ -19,7 +19,8 @@ const Dashboard: NextPage = () => {
 
   return (
     <>
-    <h1>{user?.email}</h1>
+      <h1>{user?.email}</h1>
+      <button onClick={() => signOut()}>Sign Out</button>
       <Can permissions={['metrics.list']}><Link href="/metrics">Metrics</Link></Can>
     </>
   )

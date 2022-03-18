@@ -23,7 +23,6 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>, options?: OptionsProps
       }
     }
 
-
     if (options) {
       const user = decode<{ permissions: string[], roles: string[] }>(token);
       const { permissions, roles } = options;
@@ -38,7 +37,6 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>, options?: OptionsProps
           }
         }
       }
-
     }
 
     try {
